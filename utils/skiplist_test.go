@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"minikv/utils/codec"
 	"sync"
 	"testing"
 
@@ -29,7 +28,7 @@ func TestSkipList_compare(t *testing.T) {
 
 	byte1 := []byte("1")
 	byte2 := []byte("2")
-	entry1 := codec.NewEntry(byte1, byte1)
+	entry1 := NewEntry(byte1, byte1)
 
 	byte1score := list.calcScore(byte1)
 	byte2score := list.calcScore(byte2)
@@ -46,17 +45,17 @@ func TestSkipList_compare(t *testing.T) {
 func TestSkipListBasicCRUD(t *testing.T) {
 	list := NewSkipList()
 
-	entry1 := codec.NewEntry([]byte("key1"), []byte("val1"))
+	entry1 := NewEntry([]byte("key1"), []byte("val1"))
 	assert.Nil(t, list.Add(entry1))
 	assert.Equal(t, entry1.Value, list.Search(entry1.Key).Value)
 
-	entry2 := codec.NewEntry([]byte("key2"), []byte("val2"))
+	entry2 := NewEntry([]byte("key2"), []byte("val2"))
 	assert.Nil(t, list.Add(entry2))
 	assert.Equal(t, entry2.Value, list.Search(entry2.Key).Value)
 
 	assert.Nil(t, list.Search([]byte("noexist")))
 
-	entry2_new := codec.NewEntry([]byte("key1"), []byte("val1+1"))
+	entry2_new := NewEntry([]byte("key1"), []byte("val1+1"))
 	assert.Nil(t, list.Add(entry2_new))
 	assert.Equal(t, entry2_new.Value, list.Search(entry2_new.Key).Value)
 }
@@ -67,7 +66,7 @@ func Benchmark_SkipListBasicCRUD(b *testing.B) {
 	maxTime := 1000000
 	for i := 0; i < maxTime; i++ {
 		key, val = fmt.Sprintf("key%d", i), fmt.Sprintf("val%d", i)
-		entry := codec.NewEntry([]byte(key), []byte(val))
+		entry := NewEntry([]byte(key), []byte(val))
 		res := list.Add(entry)
 		assert.Equal(b, res, nil)
 		searchVal := list.Search([]byte(key))
@@ -86,7 +85,7 @@ func TestConcurrentBasic(t *testing.T) {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
-			assert.Nil(t, l.Add(codec.NewEntry(key(i), key(i))))
+			assert.Nil(t, l.Add(NewEntry(key(i), key(i))))
 		}(i)
 	}
 	wg.Wait()
@@ -116,7 +115,7 @@ func Benchmark_ConcurrentBasic(b *testing.B) {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
-			assert.Nil(b, l.Add(codec.NewEntry(key(i), key(i))))
+			assert.Nil(b, l.Add(NewEntry(key(i), key(i))))
 		}(i)
 	}
 	wg.Wait()

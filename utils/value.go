@@ -1,4 +1,4 @@
-package codec
+package utils
 
 type ValuePtr struct {
 }

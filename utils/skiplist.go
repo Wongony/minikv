@@ -3,7 +3,6 @@ package utils
 import (
 	"bytes"
 	"math/rand"
-	"minikv/utils/codec"
 	"sync"
 )
 
@@ -13,11 +12,11 @@ const (
 
 type Element struct {
 	levels []*Element
-	entry  *codec.Entry
+	entry  *Entry
 	score  float64
 }
 
-func newElement(score float64, entry *codec.Entry, level int) *Element {
+func newElement(score float64, entry *Entry, level int) *Element {
 	return &Element{
 		levels: make([]*Element, level+1),
 		entry:  entry,
@@ -25,7 +24,7 @@ func newElement(score float64, entry *codec.Entry, level int) *Element {
 	}
 }
 
-func (elem *Element) Entry() *codec.Entry {
+func (elem *Element) Entry() *Entry {
 	return elem.entry
 }
 
@@ -50,7 +49,7 @@ func NewSkipList() *SkipList {
 	}
 }
 
-func (list *SkipList) Add(data *codec.Entry) error {
+func (list *SkipList) Add(data *Entry) error {
 	list.lock.Lock()
 	defer list.lock.Unlock()
 
@@ -88,7 +87,7 @@ func (list *SkipList) Add(data *codec.Entry) error {
 	return nil
 }
 
-func (list *SkipList) Search(key []byte) (e *codec.Entry) {
+func (list *SkipList) Search(key []byte) (e *Entry) {
 	list.lock.RLock()
 	defer list.lock.RUnlock()
 

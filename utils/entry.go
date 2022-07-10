@@ -1,4 +1,4 @@
-package codec
+package utils
 
 import (
 	"time"
